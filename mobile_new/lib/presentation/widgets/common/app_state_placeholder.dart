@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/extensions/context_extensions.dart';
@@ -84,6 +85,13 @@ class AppStatePlaceholder extends StatelessWidget {
               Icons.inbox_rounded,
               size: 72,
               color: context.colors.textSecondary.withAlpha(100),
+            ),
+          ] else if (type == AppPlaceholderType.offline) ...[
+            Lottie.asset(
+              'assets/animations/internet_error.json',
+              width: 220,
+              height: 220,
+              fit: BoxFit.contain,
             ),
           ] else ...[
             Image.asset(
