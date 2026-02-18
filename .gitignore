@@ -1,0 +1,14 @@
+# Windows artifacts
+nul
+
+# Temp/local files
+*.tar
+*.zip
+*.png
+*.md
+!CLAUDE.md
+android-studio-api-logs/
+cookies.txt
+cookies_server.txt
+answers.md
+.claude/projects/

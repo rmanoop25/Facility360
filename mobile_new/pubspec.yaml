@@ -1,0 +1,104 @@
+name: facility_maintenance
+description: "Facility360 - Facility Management Mobile App"
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.10.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # State Management
+  flutter_riverpod: ^2.6.1
+  riverpod_annotation: ^2.6.1
+
+  # Local Storage
+  hive_flutter: ^1.1.0
+  hive: ^2.2.3
+
+  # Routing
+  go_router: ^14.6.3
+
+  # Models
+  freezed_annotation: ^3.0.0
+  json_annotation: ^4.9.0
+
+  # Utils
+  uuid: ^4.5.1
+  intl: ^0.20.2
+  easy_localization: ^3.0.7
+  collection: ^1.19.0
+
+  # HTTP Client
+  dio: ^5.4.0
+
+  # Secure Storage
+  flutter_secure_storage: ^9.0.0
+
+  # Offline & Connectivity
+  connectivity_plus: ^6.0.5
+  workmanager: ^0.9.0
+
+  # Push Notifications
+  firebase_core: ^3.8.1
+  firebase_messaging: ^15.2.0
+  flutter_local_notifications: ^18.0.1
+  permission_handler: ^11.3.1
+
+  # Location
+  geolocator: ^13.0.2
+  geocoding: ^3.0.0
+  google_maps_flutter: ^2.6.1
+  url_launcher: ^6.3.1
+
+  # UI
+  flutter_svg: ^2.0.17
+  cached_network_image: ^3.4.1
+  shimmer: ^3.0.0
+  image_picker: ^1.1.2
+  google_fonts: ^6.2.1
+
+  # File System
+  path_provider: ^2.1.5
+
+  # Media Handling (Audio, PDF, Video, File Picking)
+  file_picker: ^8.1.4
+  syncfusion_flutter_pdfviewer: ^28.1.37
+  just_audio: ^0.9.42
+  audio_waveforms: ^1.0.5
+  video_player: ^2.10.0
+
+  # Icons
+  cupertino_icons: ^1.0.8
+  iconsax: ^0.0.8
+
+  # Animations
+  lottie: ^3.3.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  # Code Generation
+  build_runner: ^2.4.15
+  freezed: ^3.0.0
+  json_serializable: ^6.9.5
+  riverpod_generator: ^2.6.5
+  # Note: hive_generator conflicts with riverpod_generator; using manual adapters instead
+
+  # Linting
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/translations/
+    - assets/animations/
+    - assets/images/
+
+  # Using google_fonts package for Inter and Cairo fonts instead of local assets

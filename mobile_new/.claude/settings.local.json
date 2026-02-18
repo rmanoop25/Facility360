@@ -1,0 +1,36 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir /s /b \"C:\\\\Users\\\\Midhun\\\\Documents\\\\Midhun Works\\\\CZ\\\\AppartmentManagement\\\\backend\\\\app\\\\Http\\\\Controllers\\\\Api\\\\V1\")",
+      "Bash(findstr:*)",
+      "Bash(flutter analyze:*)",
+      "Bash(curl:*)",
+      "Bash(TOKEN=\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTkyLjE2OC4xLjE2OjgwMDAvYXBpL3YxL2F1dGgvbG9naW4iLCJpYXQiOjE3NjgyMzkyNzMsImV4cCI6MTc2ODI0Mjg3MywibmJmIjoxNzY4MjM5MjczLCJqdGkiOiJZSGpHVWdzemNidzFvdHJsIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.YUs1YnE2GOfzVzhHAAjUIRoz6oWSi9gYeO7Iqhf8xzs\")",
+      "Bash(grep:*)",
+      "Bash(find:*)",
+      "Bash(php artisan tinker:*)",
+      "Bash(php test_notifications.php:*)",
+      "Bash(del test_notifications.php)",
+      "Bash(php artisan:*)",
+      "Bash(php verify_notifications.php:*)",
+      "Bash(php test_issue_creation.php:*)",
+      "Bash(php -r:*)",
+      "Bash(php check_admin_notifications.php:*)",
+      "Bash(php test_topbar_notifications.php:*)",
+      "Bash(php debug_notifications.php:*)",
+      "WebSearch",
+      "WebFetch(domain:filamentphp.com)",
+      "Bash(php:*)",
+      "Bash(dart run build_runner:*)",
+      "Bash(test:*)",
+      "Bash(flutter pub get:*)",
+      "Bash(Select-String \".g.dart\")",
+      "Bash(git checkout:*)",
+      "Bash(flutter build:*)",
+      "Bash(Select-String -Pattern \"\\(BUILD|FAILED|error|Error|SUCCESS\\)\")",
+      "Bash(Select-Object -First 30)",
+      "Bash(flutter run:*)",
+      "Bash(flutter logs:*)"
+    ]
+  }
+}

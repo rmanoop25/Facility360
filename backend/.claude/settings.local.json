@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(php artisan:*)",
+      "Bash(flutter pub get:*)",
+      "Bash(if not exist \"C:\\\\Users\\\\Midhun\\\\Documents\\\\Midhun Works\\\\CZ\\\\AppartmentManagement\\\\mobile_new\\\\lib\\\\presentation\\\\providers\\\\permissions_provider.dart\" echo \"File does not exist\")",
+      "Bash(flutter analyze:*)",
+      "Bash(tree:*)",
+      "Bash(xargs:*)",
+      "Bash(dart run build_runner:*)",
+      "Bash(flutter pub add:*)",
+      "Bash(flutter build:*)",
+      "Bash(dir \"C:\\\\Users\\\\Midhun\\\\Documents\\\\Midhun Works\\\\CZ\\\\AppartmentManagement\\\\mobile_new\\\\lib\\\\core\" /b)",
+      "Bash(php -r:*)",
+      "Bash(php check_sp.php:*)",
+      "Bash(del \"C:\\\\Users\\\\Midhun\\\\Documents\\\\Midhun Works\\\\CZ\\\\AppartmentManagement\\\\backend\\\\check_sp.php\")",
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(dir:*)",
+      "Bash(php:*)",
+      "mcp__laravel-boost__application-info",
+      "mcp__laravel-boost__database-query",
+      "mcp__laravel-boost__tinker",
+      "Bash(cd:*)",
+      "Bash(vendor/bin/pint:*)",
+      "mcp__laravel-boost__list-routes",
+      "Bash(curl:*)",
+      "Bash(python -m json.tool:*)"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "laravel-boost"
+  ]
+}
