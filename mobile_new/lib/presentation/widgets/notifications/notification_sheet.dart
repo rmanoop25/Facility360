@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../../core/extensions/context_extensions.dart';
 import '../../../core/theme/app_spacing.dart';
@@ -171,10 +172,11 @@ class _EmptyNotifications extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.notifications_rounded,
-              size: 64,
-              color: context.colors.textTertiary,
+            Lottie.asset(
+              'assets/animations/empty_notifications.json',
+              width: 200,
+              height: 200,
+              fit: BoxFit.contain,
             ),
             AppSpacing.vGapLg,
             Text(
