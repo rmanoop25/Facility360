@@ -89,9 +89,10 @@ class AppStatePlaceholder extends StatelessWidget {
           ] else if (type == AppPlaceholderType.offline) ...[
             Lottie.asset(
               'assets/animations/internet_error.json',
-              width: 220,
-              height: 220,
+              width: 280,
+              height: 280,
               fit: BoxFit.contain,
+              repeat: false,
             ),
           ] else ...[
             Image.asset(
