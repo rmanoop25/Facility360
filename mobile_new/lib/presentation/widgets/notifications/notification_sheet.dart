@@ -174,9 +174,10 @@ class _EmptyNotifications extends StatelessWidget {
           children: [
             Lottie.asset(
               'assets/animations/empty_notifications.json',
-              width: 200,
-              height: 200,
+              width: 280,
+              height: 280,
               fit: BoxFit.contain,
+              repeat: false,
             ),
             AppSpacing.vGapLg,
             Text(
