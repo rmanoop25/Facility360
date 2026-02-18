@@ -11,6 +11,7 @@
     "error": "Error",
     "success": "Success",
     "retry": "Retry",
+    "retrying": "Retrying...",
     "view_all": "View All",
     "search": "Search",
     "add": "Add",

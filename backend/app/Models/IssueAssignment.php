@@ -191,7 +191,7 @@ class IssueAssignment extends Model
 
     public function getTotalApprovedExtensionMinutes(): int
     {
-        return $this->approvedExtensionRequests()->sum('requested_minutes');
+        return (int) $this->approvedExtensionRequests()->sum('requested_minutes');
     }
 
     public function getTotalAllowedDurationMinutes(): ?int

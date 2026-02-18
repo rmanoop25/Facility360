@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
@@ -50,7 +51,13 @@ class _PdfViewerWidgetState extends State<PdfViewerWidget> {
   String? _localPath;
   String? _downloadError;
 
-  // Auto-retry flag — SfPdfViewer failures are OS write-buffer races, always retry
+  // Download auto-retry
+  int _downloadRetryCount = 0;
+  static const int _maxDownloadRetries = 3;
+
+  // SfPdfViewer render retry (OS write-buffer race)
+  int _sfRetryCount = 0;
+  static const int _maxSfRetries = 5;
 
   @override
   void initState() {
@@ -64,7 +71,14 @@ class _PdfViewerWidgetState extends State<PdfViewerWidget> {
 
   Future<void> _downloadPdf(String url) async {
     try {
-      final response = await Dio().get<List<int>>(
+      final dio = Dio(
+        BaseOptions(
+          connectTimeout: const Duration(seconds: 30),
+          receiveTimeout: const Duration(seconds: 60),
+          sendTimeout: const Duration(seconds: 30),
+        ),
+      );
+      final response = await dio.get<List<int>>(
         url,
         options: Options(responseType: ResponseType.bytes),
       );
@@ -88,22 +102,39 @@ class _PdfViewerWidgetState extends State<PdfViewerWidget> {
         setState(() {
           _localPath = file.path;
           _isLoading = false;
+          _downloadRetryCount = 0;
         });
       }
     } catch (e) {
-      if (mounted) {
-        setState(() {
-          _downloadError = e.toString();
-          _isLoading = false;
+      debugPrint('PdfViewerWidget._downloadPdf error (attempt ${_downloadRetryCount + 1}): $e');
+      if (_downloadRetryCount < _maxDownloadRetries) {
+        _downloadRetryCount++;
+        // Auto-retry after a short delay — keep spinner showing
+        Future.delayed(Duration(milliseconds: 800 * _downloadRetryCount), () {
+          if (mounted) _downloadPdf(url);
         });
+      } else {
+        if (mounted) {
+          setState(() {
+            _downloadError = e.toString();
+            _isLoading = false;
+          });
+        }
       }
     }
   }
 
   void _handleSfLoadFailed() {
-    // Always silently retry — SfPdfViewer failures are OS write-buffer race
-    // conditions, not real errors. Keep the loading spinner visible until the
-    // PDF loads successfully. The delay gives the OS page cache time to flush.
+    // Retry up to _maxSfRetries — SfPdfViewer failures are usually OS
+    // write-buffer race conditions that resolve on retry.
+    if (_sfRetryCount >= _maxSfRetries) {
+      setState(() {
+        _downloadError = 'SF render failed after $_maxSfRetries retries';
+        _isLoading = false;
+      });
+      return;
+    }
+    _sfRetryCount++;
     setState(() {
       _localPath = null;
       _isLoading = true;
@@ -166,6 +197,18 @@ class _PdfViewerWidgetState extends State<PdfViewerWidget> {
                       style: Theme.of(context).textTheme.titleMedium,
                       textAlign: TextAlign.center,
                     ),
+                    if (kDebugMode && _downloadError != null) ...[
+                      AppSpacing.vGapSm,
+                      Text(
+                        _downloadError!,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.error.withOpacity(0.7),
+                        ),
+                        textAlign: TextAlign.center,
+                        maxLines: 4,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
                     AppSpacing.vGapMd,
                     ElevatedButton.icon(
                       onPressed: () {
@@ -173,6 +216,8 @@ class _PdfViewerWidgetState extends State<PdfViewerWidget> {
                           _isLoading = true;
                           _downloadError = null;
                           _localPath = null;
+                          _downloadRetryCount = 0;
+                          _sfRetryCount = 0;
                         });
                         _downloadPdf(widget.networkUrl!);
                       },
@@ -235,9 +280,20 @@ class _PdfViewerWidgetState extends State<PdfViewerWidget> {
                     const CircularProgressIndicator(),
                     AppSpacing.vGapMd,
                     Text(
-                      'common.loading'.tr(),
+                      _downloadRetryCount > 0
+                          ? 'common.retrying'.tr()
+                          : 'common.loading'.tr(),
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
+                    if (_downloadRetryCount > 0) ...[
+                      AppSpacing.vGapXs,
+                      Text(
+                        '$_downloadRetryCount / $_maxDownloadRetries',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.5),
+                        ),
+                      ),
+                    ],
                   ],
                 ),
               ),

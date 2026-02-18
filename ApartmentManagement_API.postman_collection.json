@@ -1,0 +1,2083 @@
+{
+	"info": {
+		"_postman_id": "apt-mgmt-api-collection",
+		"name": "Apartment Management API",
+		"description": "Complete API collection for Apartment Management System with JWT authentication",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000/api/v1",
+			"type": "string"
+		},
+		{
+			"key": "access_token",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.data && jsonData.data.access_token) {",
+									"    pm.collectionVariables.set('access_token', jsonData.data.access_token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@example.com\",\n    \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "login"]
+						},
+						"description": "Authenticate user and get JWT token. Token is automatically saved to collection variable."
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/auth/logout",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "logout"]
+						},
+						"description": "Invalidate current JWT token"
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.data && jsonData.data.access_token) {",
+									"    pm.collectionVariables.set('access_token', jsonData.data.access_token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/auth/refresh",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "refresh"]
+						},
+						"description": "Refresh JWT token before it expires"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Current User",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/auth/me",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "me"]
+						},
+						"description": "Get authenticated user info with roles and permissions"
+					},
+					"response": []
+				}
+			],
+			"description": "Authentication endpoints for login, logout, and token management"
+		},
+		{
+			"name": "Profile",
+			"item": [
+				{
+					"name": "Get Profile",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/profile",
+							"host": ["{{base_url}}"],
+							"path": ["profile"]
+						},
+						"description": "Get authenticated user's profile with tenant/service provider details"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Profile",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"John Doe\",\n    \"phone\": \"+1234567890\",\n    \"unit_number\": \"A-101\",\n    \"building_name\": \"Tower A\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/profile",
+							"host": ["{{base_url}}"],
+							"path": ["profile"]
+						},
+						"description": "Update user profile information"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Locale",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"locale\": \"en\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/profile/locale",
+							"host": ["{{base_url}}"],
+							"path": ["profile", "locale"]
+						},
+						"description": "Update language preference (en or ar)"
+					},
+					"response": []
+				},
+				{
+					"name": "Upload Profile Photo",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "photo",
+									"type": "file",
+									"src": "",
+									"description": "Profile photo (jpeg, jpg, png, webp - max 2MB)"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/profile/photo",
+							"host": ["{{base_url}}"],
+							"path": ["profile", "photo"]
+						},
+						"description": "Upload profile photo (jpeg, jpg, png, webp - max 2MB)"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Profile Photo",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/profile/photo",
+							"host": ["{{base_url}}"],
+							"path": ["profile", "photo"]
+						},
+						"description": "Delete current profile photo"
+					},
+					"response": []
+				}
+			],
+			"description": "User profile management endpoints"
+		},
+		{
+			"name": "Tenant - Issues",
+			"item": [
+				{
+					"name": "List Issues",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/issues?per_page=15&active_only=true",
+							"host": ["{{base_url}}"],
+							"path": ["issues"],
+							"query": [
+								{
+									"key": "status",
+									"value": "pending",
+									"disabled": true,
+									"description": "Filter by status: pending, assigned, in_progress, on_hold, finished, completed, cancelled"
+								},
+								{
+									"key": "priority",
+									"value": "high",
+									"disabled": true,
+									"description": "Filter by priority: low, medium, high, urgent"
+								},
+								{
+									"key": "active_only",
+									"value": "true",
+									"description": "Only show active (non-completed/cancelled) issues"
+								},
+								{
+									"key": "per_page",
+									"value": "15",
+									"description": "Number of items per page"
+								}
+							]
+						},
+						"description": "List tenant's issues with optional filters"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Issue",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "AC not working",
+									"type": "text",
+									"description": "Issue title (required, max 255 chars)"
+								},
+								{
+									"key": "description",
+									"value": "The air conditioning unit in the living room is not cooling properly. It makes a strange noise when turned on.",
+									"type": "text",
+									"description": "Issue description (required, max 5000 chars)"
+								},
+								{
+									"key": "priority",
+									"value": "medium",
+									"type": "text",
+									"description": "Priority: low, medium, high, urgent (optional, defaults to medium)"
+								},
+								{
+									"key": "category_ids[]",
+									"value": "1",
+									"type": "text",
+									"description": "Category ID (required, at least one)"
+								},
+								{
+									"key": "category_ids[]",
+									"value": "2",
+									"type": "text",
+									"disabled": true,
+									"description": "Additional category ID"
+								},
+								{
+									"key": "latitude",
+									"value": "25.2048",
+									"type": "text",
+									"disabled": true,
+									"description": "Latitude coordinate (-90 to 90)"
+								},
+								{
+									"key": "longitude",
+									"value": "55.2708",
+									"type": "text",
+									"disabled": true,
+									"description": "Longitude coordinate (-180 to 180)"
+								},
+								{
+									"key": "media[]",
+									"type": "file",
+									"src": "",
+									"disabled": true,
+									"description": "Media files (jpeg, jpg, png, webp, mp4, mov, webm - max 50MB each, max 10 files)"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/issues",
+							"host": ["{{base_url}}"],
+							"path": ["issues"]
+						},
+						"description": "Create a new maintenance issue"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Issue Details",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/issues/:id",
+							"host": ["{{base_url}}"],
+							"path": ["issues", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "Issue ID"
+								}
+							]
+						},
+						"description": "Get details of a specific issue with assignments and timeline"
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel Issue",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"reason\": \"Issue resolved itself\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/issues/:id/cancel",
+							"host": ["{{base_url}}"],
+							"path": ["issues", ":id", "cancel"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "Issue ID"
+								}
+							]
+						},
+						"description": "Request cancellation of an issue"
+					},
+					"response": []
+				}
+			],
+			"description": "Tenant issue management endpoints"
+		},
+		{
+			"name": "Service Provider - Assignments",
+			"item": [
+				{
+					"name": "List Assignments",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/assignments?per_page=15&active_only=true",
+							"host": ["{{base_url}}"],
+							"path": ["assignments"],
+							"query": [
+								{
+									"key": "status",
+									"value": "assigned",
+									"disabled": true,
+									"description": "Filter by status: assigned, in_progress, on_hold, finished, completed, cancelled"
+								},
+								{
+									"key": "date",
+									"value": "2024-01-15",
+									"disabled": true,
+									"description": "Filter by scheduled date (YYYY-MM-DD)"
+								},
+								{
+									"key": "active_only",
+									"value": "true",
+									"description": "Only show active assignments"
+								},
+								{
+									"key": "in_progress_only",
+									"value": "false",
+									"disabled": true,
+									"description": "Only show in-progress assignments"
+								},
+								{
+									"key": "per_page",
+									"value": "15",
+									"description": "Number of items per page"
+								}
+							]
+						},
+						"description": "List service provider's assignments with optional filters"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Assignment Details",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/assignments/:id",
+							"host": ["{{base_url}}"],
+							"path": ["assignments", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "Assignment ID"
+								}
+							]
+						},
+						"description": "Get details of a specific assignment with proofs and consumables"
+					},
+					"response": []
+				},
+				{
+					"name": "Start Assignment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/assignments/:id/start",
+							"host": ["{{base_url}}"],
+							"path": ["assignments", ":id", "start"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "Assignment ID"
+								}
+							]
+						},
+						"description": "Start working on an assignment"
+					},
+					"response": []
+				},
+				{
+					"name": "Hold Assignment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"reason\": \"Waiting for spare parts\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/assignments/:id/hold",
+							"host": ["{{base_url}}"],
+							"path": ["assignments", ":id", "hold"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "Assignment ID"
+								}
+							]
+						},
+						"description": "Put assignment on hold with a reason"
+					},
+					"response": []
+				},
+				{
+					"name": "Resume Assignment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/assignments/:id/resume",
+							"host": ["{{base_url}}"],
+							"path": ["assignments", ":id", "resume"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "Assignment ID"
+								}
+							]
+						},
+						"description": "Resume a held assignment"
+					},
+					"response": []
+				},
+				{
+					"name": "Finish Assignment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "notes",
+									"value": "Replaced the AC compressor and refilled refrigerant. System is now working properly.",
+									"type": "text",
+									"description": "Completion notes (optional)"
+								},
+								{
+									"key": "proofs[]",
+									"type": "file",
+									"src": "",
+									"disabled": true,
+									"description": "Proof files (jpeg, jpg, png, webp, mp4, mov, webm, mp3, wav, ogg - max 50MB each, max 20 files)"
+								},
+								{
+									"key": "consumables[0][consumable_id]",
+									"value": "1",
+									"type": "text",
+									"disabled": true,
+									"description": "Consumable ID from master data"
+								},
+								{
+									"key": "consumables[0][quantity]",
+									"value": "2",
+									"type": "text",
+									"disabled": true,
+									"description": "Quantity used (required, min 1)"
+								},
+								{
+									"key": "consumables[1][custom_name]",
+									"value": "Special Filter",
+									"type": "text",
+									"disabled": true,
+									"description": "Custom consumable name (if not in master data)"
+								},
+								{
+									"key": "consumables[1][quantity]",
+									"value": "1",
+									"type": "text",
+									"disabled": true,
+									"description": "Quantity used (required, min 1)"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/assignments/:id/finish",
+							"host": ["{{base_url}}"],
+							"path": ["assignments", ":id", "finish"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "Assignment ID"
+								}
+							]
+						},
+						"description": "Complete assignment with proofs and consumables used"
+					},
+					"response": []
+				}
+			],
+			"description": "Service provider assignment management endpoints"
+		},
+		{
+			"name": "Master Data",
+			"item": [
+				{
+					"name": "List Categories",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/categories?with_consumables_count=true",
+							"host": ["{{base_url}}"],
+							"path": ["categories"],
+							"query": [
+								{
+									"key": "with_consumables_count",
+									"value": "true",
+									"description": "Include consumables count per category"
+								}
+							]
+						},
+						"description": "List all active categories with localized names"
+					},
+					"response": []
+				},
+				{
+					"name": "List Consumables",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/consumables",
+							"host": ["{{base_url}}"],
+							"path": ["consumables"],
+							"query": [
+								{
+									"key": "category_id",
+									"value": "1",
+									"disabled": true,
+									"description": "Filter by category ID"
+								}
+							]
+						},
+						"description": "List consumables with optional category filter"
+					},
+					"response": []
+				}
+			],
+			"description": "Master data endpoints for categories and consumables"
+		},
+		{
+			"name": "Device Management",
+			"item": [
+				{
+					"name": "Register Device Token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\": \"fcm_device_token_here\",\n    \"device_type\": \"android\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/devices",
+							"host": ["{{base_url}}"],
+							"path": ["devices"]
+						},
+						"description": "Register FCM device token for push notifications. device_type: ios, android, web"
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Device Token",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/devices/:token",
+							"host": ["{{base_url}}"],
+							"path": ["devices", ":token"],
+							"variable": [
+								{
+									"key": "token",
+									"value": "fcm_device_token_here",
+									"description": "FCM device token"
+								}
+							]
+						},
+						"description": "Remove registered FCM device token"
+					},
+					"response": []
+				}
+			],
+			"description": "FCM device token management for push notifications"
+		},
+		{
+			"name": "Offline Sync",
+			"item": [
+				{
+					"name": "Get Master Data for Sync",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/sync/master-data",
+							"host": ["{{base_url}}"],
+							"path": ["sync", "master-data"]
+						},
+						"description": "Get all master data for offline caching including categories, consumables, settings, and sync timestamp"
+					},
+					"response": []
+				},
+				{
+					"name": "Batch Sync Operations",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"operations\": [\n        {\n            \"type\": \"create_issue\",\n            \"local_id\": \"local_uuid_1\",\n            \"data\": {\n                \"title\": \"Offline created issue\",\n                \"description\": \"This issue was created while offline\",\n                \"priority\": \"medium\",\n                \"category_ids\": [1]\n            },\n            \"created_at\": \"2024-01-15T10:30:00Z\"\n        },\n        {\n            \"type\": \"start_assignment\",\n            \"local_id\": \"local_uuid_2\",\n            \"data\": {\n                \"assignment_id\": 5\n            },\n            \"created_at\": \"2024-01-15T11:00:00Z\"\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/sync/batch",
+							"host": ["{{base_url}}"],
+							"path": ["sync", "batch"]
+						},
+						"description": "Batch sync offline operations. Types: create_issue, cancel_issue, start_assignment, hold_assignment, resume_assignment, finish_assignment"
+					},
+					"response": []
+				}
+			],
+			"description": "Offline synchronization endpoints"
+		},
+		{
+			"name": "Admin - Dashboard",
+			"item": [
+				{
+					"name": "Get Dashboard Stats",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/admin/dashboard/stats",
+							"host": ["{{base_url}}"],
+							"path": ["admin", "dashboard", "stats"]
+						},
+						"description": "Get dashboard statistics including issue stats, user counts, and priority breakdown"
+					},
+					"response": []
+				}
+			],
+			"description": "Admin dashboard endpoints"
+		},
+		{
+			"name": "Admin - Calendar",
+			"item": [
+				{
+					"name": "Get Calendar Events",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/admin/calendar/events?start_date=2024-01-01&end_date=2024-01-31",
+							"host": ["{{base_url}}"],
+							"path": ["admin", "calendar", "events"],
+							"query": [
+								{
+									"key": "start_date",
+									"value": "2024-01-01",
+									"description": "Start date (YYYY-MM-DD) - required"
+								},
+								{
+									"key": "end_date",
+									"value": "2024-01-31",
+									"description": "End date (YYYY-MM-DD) - required"
+								},
+								{
+									"key": "status",
+									"value": "assigned",
+									"disabled": true,
+									"description": "Filter by status"
+								},
+								{
+									"key": "service_provider_id",
+									"value": "1",
+									"disabled": true,
+									"description": "Filter by service provider"
+								},
+								{
+									"key": "category_id",
+									"value": "1",
+									"disabled": true,
+									"description": "Filter by category"
+								}
+							]
+						},
+						"description": "Get calendar events (assignments and pending issues) for a date range"
+					},
+					"response": []
+				}
+			],
+			"description": "Admin calendar endpoints"
+		},
+		{
+			"name": "Admin - Issues",
+			"item": [
+				{
+					"name": "List All Issues",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/admin/issues?per_page=15",
+							"host": ["{{base_url}}"],
+							"path": ["admin", "issues"],
+							"query": [
+								{
+									"key": "status",
+									"value": "pending",
+									"disabled": true,
+									"description": "Filter by status"
+								},
+								{
+									"key": "priority",
+									"value": "high",
+									"disabled": true,
+									"description": "Filter by priority"
+								},
+								{
+									"key": "category_id",
+									"value": "1",
+									"disabled": true,
+									"description": "Filter by category"
+								},
+								{
+									"key": "tenant_id",
+									"value": "1",
+									"disabled": true,
+									"description": "Filter by tenant"
+								},
+								{
+									"key": "search",
+									"value": "AC",
+									"disabled": true,
+									"description": "Search in title and description"
+								},
+								{
+									"key": "sort_by",
+									"value": "created_at",
+									"disabled": true,
+									"description": "Sort field"
+								},
+								{
+									"key": "sort_order",
+									"value": "desc",
+									"disabled": true,
+									"description": "Sort order: asc or desc"
+								},
+								{
+									"key": "per_page",
+									"value": "15",
+									"description": "Number of items per page"
+								}
+							]
+						},
+						"description": "List all issues with filters (Admin access)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Issue Details",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/admin/issues/:id",
+							"host": ["{{base_url}}"],
+							"path": ["admin", "issues", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "Issue ID"
+								}
+							]
+						},
+						"description": "Get issue details with assignments and timeline (Admin access)"
+					},
+					"response": []
+				},
+				{
+					"name": "Assign Service Provider",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"service_provider_id\": 1,\n    \"scheduled_date\": \"2024-01-20\",\n    \"time_slot_id\": 1,\n    \"notes\": \"Priority assignment - tenant has been waiting\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/admin/issues/:id/assign",
+							"host": ["{{base_url}}"],
+							"path": ["admin", "issues", ":id", "assign"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "Issue ID"
+								}
+							]
+						},
+						"description": "Assign a service provider to an issue (requires super_admin or manager role)"
+					},
+					"response": []
+				},
+				{
+					"name": "Approve Issue (Mark Completed)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/admin/issues/:id/approve",
+							"host": ["{{base_url}}"],
+							"path": ["admin", "issues", ":id", "approve"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "Issue ID"
+								}
+							]
+						},
+						"description": "Approve finished work and mark issue as completed (requires super_admin or manager role)"
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel Issue",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"reason\": \"Duplicate issue - already addressed in issue #45\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/admin/issues/:id/cancel",
+							"host": ["{{base_url}}"],
+							"path": ["admin", "issues", ":id", "cancel"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "Issue ID"
+								}
+							]
+						},
+						"description": "Cancel an issue with reason (requires super_admin or manager role)"
+					},
+					"response": []
+				}
+			],
+			"description": "Admin issue management endpoints"
+		},
+		{
+			"name": "Admin - Tenants",
+			"item": [
+				{
+					"name": "List Tenants",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/admin/tenants?per_page=15",
+							"host": ["{{base_url}}"],
+							"path": ["admin", "tenants"],
+							"query": [
+								{
+									"key": "search",
+									"value": "john",
+									"disabled": true,
+									"description": "Search by name or email"
+								},
+								{
+									"key": "building_name",
+									"value": "Tower A",
+									"disabled": true,
+									"description": "Filter by building"
+								},
+								{
+									"key": "is_active",
+									"value": "true",
+									"disabled": true,
+									"description": "Filter by active status"
+								},
+								{
+									"key": "sort_by",
+									"value": "created_at",
+									"disabled": true,
+									"description": "Sort field"
+								},
+								{
+									"key": "sort_order",
+									"value": "desc",
+									"disabled": true,
+									"description": "Sort order"
+								},
+								{
+									"key": "per_page",
+									"value": "15",
+									"description": "Items per page"
+								}
+							]
+						},
+						"description": "List all tenants with filters"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Tenant",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"password\": \"SecurePass123!\",\n    \"phone\": \"+1234567890\",\n    \"unit_number\": \"A-101\",\n    \"building_name\": \"Tower A\",\n    \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/admin/tenants",
+							"host": ["{{base_url}}"],
+							"path": ["admin", "tenants"]
+						},
+						"description": "Create a new tenant user"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Tenant Details",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/admin/tenants/:id",
+							"host": ["{{base_url}}"],
+							"path": ["admin", "tenants", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "Tenant ID"
+								}
+							]
+						},
+						"description": "Get tenant details with recent issues"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Tenant",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"John Smith\",\n    \"email\": \"john.smith@example.com\",\n    \"phone\": \"+1234567890\",\n    \"unit_number\": \"B-202\",\n    \"building_name\": \"Tower B\",\n    \"is_active\": true,\n    \"locale\": \"en\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/admin/tenants/:id",
+							"host": ["{{base_url}}"],
+							"path": ["admin", "tenants", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "Tenant ID"
+								}
+							]
+						},
+						"description": "Update tenant information"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Tenant",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/admin/tenants/:id",
+							"host": ["{{base_url}}"],
+							"path": ["admin", "tenants", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "Tenant ID"
+								}
+							]
+						},
+						"description": "Delete a tenant (requires super_admin role)"
+					},
+					"response": []
+				}
+			],
+			"description": "Admin tenant management endpoints"
+		},
+		{
+			"name": "Admin - Service Providers",
+			"item": [
+				{
+					"name": "List Service Providers",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/admin/service-providers?per_page=15",
+							"host": ["{{base_url}}"],
+							"path": ["admin", "service-providers"],
+							"query": [
+								{
+									"key": "search",
+									"value": "ahmad",
+									"disabled": true,
+									"description": "Search by name or email"
+								},
+								{
+									"key": "category_id",
+									"value": "1",
+									"disabled": true,
+									"description": "Filter by category"
+								},
+								{
+									"key": "is_available",
+									"value": "true",
+									"disabled": true,
+									"description": "Filter by availability"
+								},
+								{
+									"key": "is_active",
+									"value": "true",
+									"disabled": true,
+									"description": "Filter by active status"
+								},
+								{
+									"key": "sort_by",
+									"value": "created_at",
+									"disabled": true,
+									"description": "Sort field"
+								},
+								{
+									"key": "sort_order",
+									"value": "desc",
+									"disabled": true,
+									"description": "Sort order"
+								},
+								{
+									"key": "per_page",
+									"value": "15",
+									"description": "Items per page"
+								}
+							]
+						},
+						"description": "List all service providers with filters"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Service Provider",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Ahmad Technician\",\n    \"email\": \"ahmad@example.com\",\n    \"password\": \"SecurePass123!\",\n    \"phone\": \"+1234567890\",\n    \"category_id\": 1,\n    \"is_available\": true,\n    \"latitude\": 25.2048,\n    \"longitude\": 55.2708,\n    \"time_slots\": [\n        {\n            \"day_of_week\": 0,\n            \"is_full_day\": false,\n            \"start_time\": \"09:00\",\n            \"end_time\": \"17:00\"\n        },\n        {\n            \"day_of_week\": 1,\n            \"is_full_day\": false,\n            \"start_time\": \"09:00\",\n            \"end_time\": \"17:00\"\n        },\n        {\n            \"day_of_week\": 2,\n            \"is_full_day\": true\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/admin/service-providers",
+							"host": ["{{base_url}}"],
+							"path": ["admin", "service-providers"]
+						},
+						"description": "Create a new service provider with time slots. day_of_week: 0=Sunday through 6=Saturday"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Service Provider Details",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/admin/service-providers/:id",
+							"host": ["{{base_url}}"],
+							"path": ["admin", "service-providers", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "Service Provider ID"
+								}
+							]
+						},
+						"description": "Get service provider details with time slots and statistics"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Service Provider",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Ahmad Senior Technician\",\n    \"email\": \"ahmad.senior@example.com\",\n    \"phone\": \"+1234567891\",\n    \"category_id\": 1,\n    \"is_available\": true,\n    \"latitude\": 25.2048,\n    \"longitude\": 55.2708,\n    \"locale\": \"ar\",\n    \"time_slots\": [\n        {\n            \"id\": 1,\n            \"day_of_week\": 0,\n            \"is_full_day\": false,\n            \"start_time\": \"08:00\",\n            \"end_time\": \"18:00\",\n            \"is_active\": true\n        },\n        {\n            \"id\": 2,\n            \"_delete\": true\n        },\n        {\n            \"day_of_week\": 5,\n            \"is_full_day\": true\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/admin/service-providers/:id",
+							"host": ["{{base_url}}"],
+							"path": ["admin", "service-providers", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "Service Provider ID"
+								}
+							]
+						},
+						"description": "Update service provider. Include id in time_slots to update, _delete: true to remove, or omit id to create new"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Service Provider",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/admin/service-providers/:id",
+							"host": ["{{base_url}}"],
+							"path": ["admin", "service-providers", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "Service Provider ID"
+								}
+							]
+						},
+						"description": "Delete a service provider (requires super_admin role)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get SP Availability",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/admin/service-providers/:id/availability?date=2024-01-20",
+							"host": ["{{base_url}}"],
+							"path": ["admin", "service-providers", ":id", "availability"],
+							"query": [
+								{
+									"key": "date",
+									"value": "2024-01-20",
+									"description": "Date to check availability (YYYY-MM-DD) - required"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "Service Provider ID"
+								}
+							]
+						},
+						"description": "Get service provider availability for a specific date with time slots status"
+					},
+					"response": []
+				}
+			],
+			"description": "Admin service provider management endpoints"
+		},
+		{
+			"name": "Admin - Categories",
+			"item": [
+				{
+					"name": "List Categories",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/admin/categories?per_page=15",
+							"host": ["{{base_url}}"],
+							"path": ["admin", "categories"],
+							"query": [
+								{
+									"key": "search",
+									"value": "plumbing",
+									"disabled": true,
+									"description": "Search by name"
+								},
+								{
+									"key": "is_active",
+									"value": "true",
+									"disabled": true,
+									"description": "Filter by active status"
+								},
+								{
+									"key": "with_counts",
+									"value": "true",
+									"disabled": true,
+									"description": "Include SP and consumables count"
+								},
+								{
+									"key": "all",
+									"value": "false",
+									"disabled": true,
+									"description": "Get all without pagination"
+								},
+								{
+									"key": "sort_by",
+									"value": "name_en",
+									"disabled": true,
+									"description": "Sort field"
+								},
+								{
+									"key": "sort_order",
+									"value": "asc",
+									"disabled": true,
+									"description": "Sort order"
+								},
+								{
+									"key": "per_page",
+									"value": "15",
+									"description": "Items per page"
+								}
+							]
+						},
+						"description": "List all categories with filters"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Category",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name_en\": \"Plumbing\",\n    \"name_ar\": \"السباكة\",\n    \"icon\": \"plumbing\",\n    \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/admin/categories",
+							"host": ["{{base_url}}"],
+							"path": ["admin", "categories"]
+						},
+						"description": "Create a new category with bilingual names"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Category",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name_en\": \"Plumbing & Pipes\",\n    \"name_ar\": \"السباكة والأنابيب\",\n    \"icon\": \"plumbing_updated\",\n    \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/admin/categories/:id",
+							"host": ["{{base_url}}"],
+							"path": ["admin", "categories", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "Category ID"
+								}
+							]
+						},
+						"description": "Update category information"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Category",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/admin/categories/:id",
+							"host": ["{{base_url}}"],
+							"path": ["admin", "categories", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "Category ID"
+								}
+							]
+						},
+						"description": "Delete a category (requires super_admin role)"
+					},
+					"response": []
+				}
+			],
+			"description": "Admin category management endpoints"
+		},
+		{
+			"name": "Admin - Consumables",
+			"item": [
+				{
+					"name": "List Consumables",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/admin/consumables?per_page=15",
+							"host": ["{{base_url}}"],
+							"path": ["admin", "consumables"],
+							"query": [
+								{
+									"key": "search",
+									"value": "filter",
+									"disabled": true,
+									"description": "Search by name"
+								},
+								{
+									"key": "category_id",
+									"value": "1",
+									"disabled": true,
+									"description": "Filter by category"
+								},
+								{
+									"key": "is_active",
+									"value": "true",
+									"disabled": true,
+									"description": "Filter by active status"
+								},
+								{
+									"key": "all",
+									"value": "false",
+									"disabled": true,
+									"description": "Get all without pagination"
+								},
+								{
+									"key": "sort_by",
+									"value": "name_en",
+									"disabled": true,
+									"description": "Sort field"
+								},
+								{
+									"key": "sort_order",
+									"value": "asc",
+									"disabled": true,
+									"description": "Sort order"
+								},
+								{
+									"key": "per_page",
+									"value": "15",
+									"description": "Items per page"
+								}
+							]
+						},
+						"description": "List all consumables with filters"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Consumable",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"category_id\": 1,\n    \"name_en\": \"Air Filter\",\n    \"name_ar\": \"فلتر هواء\",\n    \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/admin/consumables",
+							"host": ["{{base_url}}"],
+							"path": ["admin", "consumables"]
+						},
+						"description": "Create a new consumable with bilingual names"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Consumable",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"category_id\": 1,\n    \"name_en\": \"HEPA Air Filter\",\n    \"name_ar\": \"فلتر هواء هيبا\",\n    \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/admin/consumables/:id",
+							"host": ["{{base_url}}"],
+							"path": ["admin", "consumables", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "Consumable ID"
+								}
+							]
+						},
+						"description": "Update consumable information"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Consumable",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/admin/consumables/:id",
+							"host": ["{{base_url}}"],
+							"path": ["admin", "consumables", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "Consumable ID"
+								}
+							]
+						},
+						"description": "Delete a consumable (requires super_admin role)"
+					},
+					"response": []
+				}
+			],
+			"description": "Admin consumable management endpoints"
+		},
+		{
+			"name": "Admin - Users",
+			"item": [
+				{
+					"name": "List Admin Users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/admin/users?per_page=15",
+							"host": ["{{base_url}}"],
+							"path": ["admin", "users"],
+							"query": [
+								{
+									"key": "search",
+									"value": "admin",
+									"disabled": true,
+									"description": "Search by name or email"
+								},
+								{
+									"key": "role",
+									"value": "manager",
+									"disabled": true,
+									"description": "Filter by role: super_admin, manager, viewer"
+								},
+								{
+									"key": "is_active",
+									"value": "true",
+									"disabled": true,
+									"description": "Filter by active status"
+								},
+								{
+									"key": "sort_by",
+									"value": "created_at",
+									"disabled": true,
+									"description": "Sort field"
+								},
+								{
+									"key": "sort_order",
+									"value": "desc",
+									"disabled": true,
+									"description": "Sort order"
+								},
+								{
+									"key": "per_page",
+									"value": "15",
+									"description": "Items per page"
+								}
+							]
+						},
+						"description": "List all admin users (requires super_admin role)"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Admin User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Manager User\",\n    \"email\": \"manager@example.com\",\n    \"password\": \"SecurePass123!\",\n    \"phone\": \"+1234567890\",\n    \"role\": \"manager\",\n    \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/admin/users",
+							"host": ["{{base_url}}"],
+							"path": ["admin", "users"]
+						},
+						"description": "Create a new admin user. Roles: super_admin, manager, viewer"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Admin User Details",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/admin/users/:id",
+							"host": ["{{base_url}}"],
+							"path": ["admin", "users", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "User ID"
+								}
+							]
+						},
+						"description": "Get admin user details with role"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Admin User",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Senior Manager\",\n    \"email\": \"senior.manager@example.com\",\n    \"phone\": \"+1234567891\",\n    \"role\": \"manager\",\n    \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/admin/users/:id",
+							"host": ["{{base_url}}"],
+							"path": ["admin", "users", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "User ID"
+								}
+							]
+						},
+						"description": "Update admin user information"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Admin User",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/admin/users/:id",
+							"host": ["{{base_url}}"],
+							"path": ["admin", "users", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "User ID"
+								}
+							]
+						},
+						"description": "Delete an admin user (requires super_admin role)"
+					},
+					"response": []
+				},
+				{
+					"name": "Reset User Password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"password\": \"NewSecurePass123!\",\n    \"send_email\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/admin/users/:id/reset-password",
+							"host": ["{{base_url}}"],
+							"path": ["admin", "users", ":id", "reset-password"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "User ID"
+								}
+							]
+						},
+						"description": "Reset user password. If password not provided, auto-generates one"
+					},
+					"response": []
+				},
+				{
+					"name": "Toggle User Active Status",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/admin/users/:id/toggle-active",
+							"host": ["{{base_url}}"],
+							"path": ["admin", "users", ":id", "toggle-active"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "User ID"
+								}
+							]
+						},
+						"description": "Toggle user active/inactive status"
+					},
+					"response": []
+				}
+			],
+			"description": "Admin user management endpoints (requires super_admin role)"
+		}
+	]
+}

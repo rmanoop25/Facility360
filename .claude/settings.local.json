@@ -124,7 +124,10 @@
       "Bash(TOKEN=\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTkyLjE2OC4xLjE3OjgwMDAvYXBpL3YxL2F1dGgvbG9naW4iLCJpYXQiOjE3NzEzNDgyNjgsImV4cCI6MTc3MTM1MTg2OCwibmJmIjoxNzcxMzQ4MjY4LCJqdGkiOiJRWTloSkFOampYQXByN2FOIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.sn9onNghi8PBPmswUWNVDanYr40Z9KwqmO6_FEQAZog\")",
       "Bash(__NEW_LINE_f0a7c1c48b8bd470__ echo \"=== TEST 1: Valid update \\(super admin\\) ===\")",
       "Bash(__NEW_LINE_bd78a08b2046ff63__ echo \"=== TEST 2: Missing title → 422 ===\")",
-      "Bash(__NEW_LINE_bd78a08b2046ff63__ echo \"\")"
+      "Bash(__NEW_LINE_bd78a08b2046ff63__ echo \"\")",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
     ]
   }
 }
