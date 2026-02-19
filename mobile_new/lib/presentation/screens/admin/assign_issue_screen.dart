@@ -2238,6 +2238,11 @@ class _AssignIssueScreenState extends ConsumerState<AssignIssueScreen> {
       loading: () => const SizedBox.shrink(),
       error: (_, __) => const SizedBox.shrink(),
       data: (timeSlots) {
+        // No time slots for this date - no overlap possible
+        if (timeSlots.isEmpty) {
+          return const SizedBox.shrink();
+        }
+
         // Find the selected slot
         final selectedSlot = timeSlots.firstWhere(
           (slot) => slot.id == _selectedTimeSlotId,
